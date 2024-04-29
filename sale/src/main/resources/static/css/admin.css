@@ -1,0 +1,550 @@
+/* Fontawesome 4.7 */
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:300,400,500,700,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500&display=swap');
+
+/* reset CSS */
+a {
+    text-decoration: none;
+    color: #222;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-weight: normal;
+}
+
+button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+input,
+textarea,
+select {
+    outline: none;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Noto Sans KR', sans-serif;
+    /* font-family: 'Montserrat', sans-serif; */
+    line-height: 1.5em;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.admincontainer{
+    width: 1200px;
+    display: flex;
+    height: 100%;
+}
+.admincontainer .adminnav{
+    flex:1;
+    background-color: #91aeb6;
+}
+.adminnav header{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid #839da5;
+    height: 100px;
+}
+.adminnav header h3 a{
+    color: #ffffff;
+    font-weight: 600;
+}
+.adminmenu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+.adminmenu button,.adminmenu a{
+    text-align: center;
+    margin-top: 10px;
+    color: #ffffff;
+    width: 100%;
+    padding: 10px 0px;
+    background-color: #91aeb6;
+}
+.adminmenu button.active{
+    background-color: #839da5;
+}
+.adminmain{
+    flex: 5;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+/* user */
+.usercontainer{
+    width: 100%;
+}
+.usercontainer h1{
+    text-align: center;
+    color: rgb(198, 138, 61);
+}
+.userList {
+    border-collapse: collapse;
+    width: 100%;
+    border-bottom: 1px solid #839da5;
+}
+.userList tr th {
+    background-color: antiquewhite;
+}
+.userList tr td {
+    border-top: 1px solid #839da5 ;
+    color: darkgreen;
+    text-align: center;
+}
+.userButton {
+    width: 100%;
+    text-align: right;
+    margin: 10px;
+}
+.userButton input {
+    border: 0;
+    background-color: black;
+    padding: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.userList input{
+    border: 0;
+    background-color: rgb(201, 224, 21);
+    padding: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+    cursor: pointer;
+}
+/* qna */
+.qnacontainer {
+    width: 100%;
+}
+.qnacontainer h1 {
+    color: #2d3436;
+    text-align: center;
+    margin: 15px;
+}
+.qnacontainer .qnatable {
+}
+.qnalist {
+    border-collapse: collapse;
+    width: 100%;
+    border-bottom: 1px solid #839da5;
+}
+.qnalist tr th {
+    background-color: #3498db;
+    color: #ffffff;
+    text-align: center;
+}
+.qnalist tr td {
+    background-color: #ecf0f1;
+    color: #636e72;
+    text-align: center;
+}
+.qancontnetarray {
+    border: 1px solid #636e72;
+    height: 150px;
+    overflow-y: scroll;
+}
+.qnatextarray {
+    display: none;
+    width: 100%;
+}
+.qnatext {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.qnatext label,
+.qnatext textarea,
+.qnatext button {
+    margin-left: 5px;
+    flex: 1;
+}
+.qnatext textarea {
+    flex: 4;
+    border: 0;
+    resize: none;
+    padding: 10px;
+    align-items: center;
+    border-radius: 10px;
+}
+.qnatext button {
+    flex: 1;
+    border: 0;
+    background-color: #3498db;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+    color: #ffffff;
+}
+.qnatext button:hover {
+    background-color: #34465d;
+}
+.qnatext .button-qna {
+    text-align: center;
+}
+.qnatext label {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 600;
+    color: #34465d;
+    margin-left: 5px;
+}
+/* refund */
+.refundcontainer {
+    width: 100%;
+}
+.refundcontainer h1 {
+    color: #fbc531;
+    text-align: center;
+    margin: 15px;
+}
+.refundcontainer .refundtable {
+}
+.refundlist {
+    border-collapse: collapse;
+    width: 100%;
+    border-bottom: 1px solid #839da5;
+}
+.refundlist tr th {
+    background-color: #fea47f;
+    color: #ffffff;
+    text-align: center;
+}
+.refundlist tr td {
+    background-color: #cad3c8;
+    color: #1b9cfc;
+    text-align: center;
+}
+.refundlist tr td button {
+    background-color: #1b9cfc;
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 20px 10px 20px;
+    color: #ffffff;
+    cursor: pointer;
+}
+.refundlist tr td button:hover {
+    background-color: #3b3b98;
+}
+
+/* game */
+.gamecontainer{
+    width: 100%;
+}
+.gameList {
+    border-collapse: collapse;
+    width: 100%;
+    border-bottom: 1px solid #839da5;
+}
+.gameList tr th {
+    background-color: antiquewhite;
+}
+.gameList tr td {
+    border-top: 1px solid #839da5;
+    color: darkgreen;
+    text-align: center;
+}
+.gameList tr td a {
+    text-decoration: none;
+    color: #839da5;
+    font-size: 12px;
+}
+.gameList tr td p{
+    font-size: 12px;
+}
+.gameList tr td .btn {
+    border: 0;
+    padding: 10px;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #09b83e;
+    cursor: pointer;
+}
+.gameList tr td .btn:hover {
+    background-color: #34465d;
+}
+.gameButton {
+    width: 100%;
+    text-align: right;
+    margin: 10px;
+}
+.gameButton input {
+    border: 0;
+    background-color: black;
+    padding: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.gamecontainer h1 {
+    text-align: center;
+    color: rgb(198, 138, 61);
+}
+/* gameform */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+textarea{
+    resize: none;
+}
+textarea,input{
+    outline: none;
+    border: 0;
+}
+.gameformcontainer h1{
+    text-align: center;
+    margin-top: 10px;
+}
+.gameformcontainer{
+    width: 100%;
+    background-color: #ECF0F1;
+    border-radius: 15px;
+}
+.gameformcontainer .gameform{
+    width: 100%;
+}
+.gameform .gameinfo{
+    display: flex;
+    flex-direction: column;
+}
+.gameinfo div{
+    display: flex;
+
+}
+.gameinfo div label{
+    font-weight: 600;
+    text-align: center;
+}
+.gameinfo div label, .gameinfo div input{
+    width: 150px;
+    margin: 5px;
+    font-size: 12px;
+    color: black;
+}
+.gameinfo div label{
+    flex: 1;
+}
+.gameinfo div input{
+    border: 1px solid #34495E;
+    border-radius: 5px;
+    color: black;
+    background-color: #f3fbfd;
+    padding: 3px 2px;
+}
+.gameinfo div input::placeholder{
+    font-size: 10px;
+    color: black;
+}
+.specificationscontainer{
+    width: 100%;
+}
+.specifications {
+    display: flex;
+    align-items: center;
+}
+.specifications label{
+    width: 85px;
+    text-align: center;
+}
+.specifications textarea{
+    background-color: #f3fbfd;
+    padding: 5px;
+}
+.specifications label,.specifications textarea{
+    font-size:12px;
+    font-weight: 600;
+}
+.imagecontainer{
+    width: 100%;
+    text-align: center;
+}
+input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+.imagecontainer h3{
+    margin: 5px;
+
+}
+.filebox{
+    display: flex;
+    margin: 5px;
+    justify-content: center;
+}
+.filebox .upload-name {
+    display: inline-block;
+    padding: 5px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 150px;
+    color: #999999;
+}
+.filebox label {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    align-items: center;
+    color: #fff;
+    background-color: #999999;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.insert {
+    padding-bottom: 5px;
+    display: block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.insert .buttonmulti label{
+    color: #fff;
+    background-color: #999999;
+    cursor: pointer;
+    display: block;
+    width: 80px;
+    padding: 10px;
+    text-align: center;
+}
+.insert .buttonmulti{
+    display: flex;
+    justify-content: right;
+}
+
+.insert .file-list {
+    overflow: auto;
+    border: 1px solid #989898;
+    height: 150px;
+    padding: 10px;
+}
+.insert .file-list .filebox p {
+    font-size: 14px;
+    margin-top: 10px;
+    display: inline-block;
+}
+.insert .file-list .filebox .delete i{
+    color: #ff5353;
+    margin-left: 5px;
+}
+.ck-editor__editable {
+    height: 200px;
+}
+.ck-content {
+    font-size: 12px;
+}
+.buttonInsert{
+
+    text-align: center;
+}
+#resultbtn{
+    border: 0;
+    background-color: black;
+    padding: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+    cursor: pointer;
+}
+/* review */
+.reviewcontainer{
+    width: 100%;
+}
+.reviewList {
+    border-collapse: collapse;
+    width: 100%;
+    border-bottom: 1px solid #839da5;
+}
+.reviewList tr th {
+    background-color: antiquewhite;
+}
+.reviewList tr td {
+    border-top: 1px solid #839da5;
+    color: darkgreen;
+    text-align: center;
+}
+.reviewList tr td a {
+    text-decoration: none;
+    color: #839da5;
+}
+.reviewList tr td .btn {
+    border: 0;
+    padding: 10px;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #09b83e;
+    cursor: pointer;
+}
+.reviewList tr td .btn:hover {
+    background-color: #34465d;
+}
+.reviewcontainer h1 {
+    text-align: center;
+    color: rgb(198, 138, 61);
+    margin: 20px 0px;
+}
+/* pageing*/
+.paging-admin{
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.paging-admin ul{
+    display: flex;
+
+}
+.paging-admin ul li{
+    margin-left: 10px;
+}
+.paging-admin ul li a{
+    background-color: #131418;
+    color: #ffffff;
+    display: block;
+    padding: 10px 20px;
+    border-radius: 5px;
+}

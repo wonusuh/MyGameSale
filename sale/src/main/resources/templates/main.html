@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/header :: common_header(~{::link})}">
+    <meta charset="UTF-8">
+    <title>더좋은 게임</title>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/main_body.css">
+    <link rel="stylesheet" href="/css/modal.css">
+</head>
+<style th:replace="~{fragment/header :: bodyinit}"></style>
+<body>
+<div>
+<header th:replace="~{fragment/header :: header}"></header>
+<nav th:replace="~{fragment/header :: nav}"></nav>
+<div class="main-background">
+    <div class="pro-Container-back">
+        <div class="promotion container">
+            <div class="main-promotions">
+                <a class="prev-left">
+                    <i class="fa-sharp fa-solid fa-chevron-left"></i>
+                </a>
+                <div class="header-images">
+                    <div th:each="game : ${listMap['popularity']}">
+                        <a th:href="@{/game/detail/{steamAppid}(steamAppid=${game.getSteamAppid()})}">
+                            <img th:if="${game.platform eq 'steam' }" th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getHeaderImage()}}" th:alt="${game.getName()}">
+                            <img th:unless="${game.platform eq 'steam' }" th:src="${game.getHeaderImage()}" th:alt="${game.getName()}">
+                        </a>
+                        <div class="item-content">
+                            <div class="article-header clearfix">
+                                <h2 class="article-title" itemprop="headline">
+                                    <a th:href="@{/game/detail/{steamAppid}(steamAppid=${game.getSteamAppid()})}">
+                                        <div class="banner_label">
+                                            <span>절찬판매중</span>
+                                        </div>
+                                        <div class="banner_title">
+                                            <span th:text="${game.getName()}"></span>
+                                        </div>
+
+
+                                        <div th:if="${game.getDiscount() > 0}" class="banner_sale_percent">
+                                            <span th:text="${game.getDiscount()+'%'}"></span>
+                                        </div>
+                                        <div th:unless="${game.getDiscount() > 0}" style="min-width:90px;display:inline-block"></div>
+                                        <div class="banner_sale_price">
+                                            <span th:text="${game.getFormattedSalesPrice()+ '원'}"> </span>
+                                        </div>
+                                    </a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="prev-right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div><!-- 리스트 col-->
+            <div class="t3-module module normal-module" id="Mod120">
+                <div class="module-inner">
+                    <h3 class="module-title"><strong><span style="font-size:16px">공지사항</span></strong>
+                        <div class="pull-right" style="padding-top:4px;"><a href="/notice">+
+                            더보기</a></div>
+                    </h3>
+                    <div class="list-group">
+                        <th:block th:each="n : ${nList}">
+                            <a class="list-group-item" th:href="@{/notice/noticeView(id=${n.noticeId})}" th:text="${n.noticeTitle}"></a>
+                        </th:block>
+                    </div>
+                </div>
+            </div><!-- 공지 리스트-->
+        </div> <!--상단 컨테이너-->
+    </div><!--산단 back-->
+
+    <div id="t3-mainbody" class="wrap t3-mainbody" style="margin-top:20px;">
+        <div class="main_container">
+            <ul class="nav nav-tabs ">
+                <li class="main-li active" data-toggle="releaseDate"><a  href="#module-97" aria-expanded="true" title="최신게임">최신
+                    게임</a></li>
+                <li class="main-li" data-toggle="korean"><a href="#module-100" aria-expanded="false">한글화 게임</a></li>
+                <li class="main-li" data-toggle="popularity"><a  href="#module-98" aria-expanded="false">인기 게임</a></li>
+                <li class="main-li" data-toggle="discount"><a  href="#module-96" aria-expanded="false">할인 게임</a></li>
+                <li class="main-li"><a data-toggle="tab" href="#module-101" aria-expanded="false">판매 예정</a></li>
+            </ul><!--nav 컨테이너-->
+
+            <div class="tab-content">
+                <th:block th:each="entry : ${listMap}" >
+                <div class="tab-pane fade" th:classappend="${entry.key}">
+                    <div class="col"  child-height="348" th:each="game : ${entry.value}">
+                        <div class="spacer"
+                             style="min-height: 350px;padding-bottom:10px;padding-left:15px;padding-right:15px;">
+                            <div class="vm-product-media-container" style="margin:0;padding:0;">
+                                <a th:title="${game.getName()}"
+                                   th:href="@{/game/detail/{steamAppid}(steamAppid=${game.getSteamAppid()})}"
+                                   class="vmproduct-img"
+                                   itemprop="url">
+
+                                    <img th:if="${game.platform eq 'steam' }" th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getHeaderImage()}}"
+                                        th:alt="${game.getName()}"
+                                        class="featuredProductImage" width="255"
+                                        itemprop="image" onerror="this.src='/images/404.jpg'">
+                                    <img th:unless="${game.platform eq 'steam' }" th:src="${game.getHeaderImage()}" th:alt="${game.getName()}"
+                                         class="featuredProductImage" width="255" height="150"
+                                         itemprop="image" onerror="this.src='/images/404.jpg'">
+                                </a>
+                            </div>
+
+                            <div class="vm-product-descr-container-1" style="min-height:80px">
+                                <h2 style="text-align:left;" >
+                                    <a th:href="@{/game/detail/{steamAppid}(steamAppid=${game.getSteamAppid()})}" class="vmproduct-title" th:text="${game.getName()}"></a>
+                                </h2>
+                                <div class="vm3pr-customfields-product" itemprop="productID" content="50004330">
+                                    <div style="float:left;">
+
+                                            <span class="label label-light"
+                                                  style="background: rgba(255,255,255,0.1);font-size: 11px;font-weight: bold; padding: 5px;color: #ffffff;"
+                                                  itemprop="category"
+                                                  th:text="${game.getGenreList().get(0)}"></span>
+                                            <span class="label label-light"
+                                                  style="background: rgba(255,255,255,0.1);font-size: 11px;font-weight: bold; padding: 5px;color: #ffffff;"
+                                                  itemprop="category"
+                                                  th:if="${game.getGenreList().size() > 1}"
+                                                  th:text="${game.getGenreList().get(1)}"></span>
+                                        <span class="label label-default"
+                                              style="background: rgba(255,255,255,0.1);font-size: 11px;font-weight: bold;padding: 5px;color: #ffffff;">Steam</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="vm3pr-2">
+                                <div class="product-price salesprice" id="productPrice3">
+                                    <div class="pull-right">
+                                        <div style="margin-top:10px;width:50px;height:30px;">
+                                                <span class="label label-danger"
+                                                      style="font-size:14px;font-family:tahoma;vertical-align: bottom;color:#ffffff;padding-top:8px;padding-bottom:8px;width:50px;"
+                                                      th:text="${game.getDiscount()+'%'}">
+                                                </span>
+                                        </div>
+                                    </div>
+                                    <div class="PricebasePrice vm-display vm-price-value">
+                                        <span class="vm-price-desc">정상가: </span>
+                                        <span class="PricebasePrice"
+                                              style="text-decoration: line-through;opacity:0.5;">
+                                            <span style="font-family:dotum" itemprop="priceCurrency" content="KRW">\</span>
+                                            <span itemprop="baseprice" th:text="${game.getFormattedPrice()}"></span>
+                                        </span>
+                                    </div>
+                                    <span class="price-crossed"></span>
+                                    <div class="PricesalesPrice vm-display vm-price-value"
+                                         style="padding:0;padding-top:4px">
+                                        <span class="vm-price-desc">판매가: </span>
+                                        <span class="PricesalesPrice" style="font-weight: bold; background:none;margin:0;padding:0">
+                                                <span style="font-family:dotum" itemprop="priceCurrency" content="KRW">\</span>
+                                                <span itemprop="price" th:text="${game.getFormattedSalesPrice()}"></span>
+                                         </span>
+                                    </div>
+                                </div>
+
+                                <div class="clear"></div>
+                            </div>
+                            <div class="vm3pr-0">
+                                <div class="addtocart-area">
+                                    <div class="addtocart-bar" style="margin-top:0;padding-top:16px;    float: left;
+                                        width: 100%;">
+                                        <div class="pull-left">
+                                            <div style="display:block;"><img src="/images/steam.svg" width="60" alt="Steam">
+                                            </div>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button type="button"
+                                                    class="btn btn-default btn-lg btn-warning btn_cart"
+                                                    th:attr="data-appId=${game.getSteamAppid()}"
+                                                    ><i class="fa fa-shopping-cart"></i>
+                                                장바구니</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--리스트 col-->
+
+                </div><!--리스트 parent-->
+                </th:block>
+            </div><!--리스트 컨테이너-->
+            <div class="text-right"><a th:href="@{/game/search/fromMain}"  title="전체보기">전체보기</a></div>
+        </div><!--하단 컨테이너 -->
+    </div><!--하단 back-->
+</div>
+</div>
+<div th:replace="~{fragment/admin :: modal}"></div>
+<div class="overlay"></div>
+</body>
+</html>
+<!--<script defer src="/js/header.js" type="text/javascript"></script>-->
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        initModal();
+        initSortBtn();
+        $('.header-images').slick({
+            prevArrow: $('.prev-left'),
+            nextArrow: $('.prev-right'),
+            dots:true,                  //아래 도트 표시
+            slidesToShow: 1,            //한번에 보여줄 슬라이드 아이템 개수
+            slidesToScroll: 1,          //한번에 넘길 슬라이드 아이템 개수
+            slidesPerRow: 1,            //보여질 행의 수 (한 줄, 두 줄 ... )
+            autoplay: true,             //슬라이드 자동 시작(true or false) ▶기본값 false
+            autoplaySpeed: 2500,
+            pauseOnHover: true,
+        });
+        $('.header-images').addClass("show");
+    });
+    function valuesAccept(){
+        document.querySelector(".modal").classList.remove("active");
+        document.querySelector(".overlay").classList.remove("active");
+    }
+    function initModal(){
+        $('.btn-list > button:last').remove();
+    }
+
+    function showModalCheck(subject) {
+        document.querySelector(".modal").classList.add("active");
+        document.querySelector(".overlay").classList.add("active");
+        document.querySelector(".subject").innerHTML = subject;
+    }
+
+    function initSortBtn(){
+        $('.tab-pane').removeClass('active');
+        $(".tab-pane.releaseDate").addClass('active contents in');
+    }
+    $('.nav .main-li').on('click', function () {
+        $('.nav .main-li').removeClass('active');
+        $(this).addClass('active');
+        let name = $(this).attr('data-toggle');
+
+        $('.tab-pane').removeClass('in');
+        setTimeout(function (){
+            $('.tab-pane').removeClass('active');
+            $('.tab-pane').removeClass('contents');
+
+            $('.tab-pane.'+name).addClass('active');
+            $('.tab-pane.'+name).addClass('contents');
+            setTimeout(function (){
+                $('.tab-pane.'+name).addClass('in');
+            },150);
+        },180);
+
+    });
+
+    // 장바구니에 담는 함수
+    $('.btn_cart').on('click', function () {
+        console.log(`장바구니로`);
+        console.log($(this).attr('data-appId'));
+        isLoggedIn(logTrueFalse => {
+            if (logTrueFalse) {
+                const url = "/cart/addToCart";
+                fetch(url,{
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"},
+                    body: "appId="+$(this).attr('data-appId'),
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        if(data==="success"){
+                            showModalCheck("장바구니에 담았습니다.")
+                        }else {
+                            showModalCheck("이미 장바구니에 등록된 상품입니다.")
+                        }
+                    })
+                    .catch(error => {
+                        console.log("error: ", error);
+                    });
+            } else {
+                showModalCheck("로그인을 하셔야 이용이 가능합니다.");
+            }
+        });
+    });
+</script>
