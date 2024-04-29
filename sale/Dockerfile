@@ -16,4 +16,4 @@ VOLUME /app/upload
 
 WORKDIR $APP_HOME
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["java","-jar","/app/test.jar"]
