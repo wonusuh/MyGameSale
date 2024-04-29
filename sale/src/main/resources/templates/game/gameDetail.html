@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/header :: common_header(~{::link})}">
+    <meta charset="UTF-8">
+    <title>더좋은 게임</title>
+    <link rel="stylesheet" href="/css/gameDetail.css">
+    <link rel="stylesheet" href="/css/gameDetail_review.css">
+    <link rel="stylesheet" href="/css/modal.css">
+</head>
+<style th:replace="~{fragment/header :: bodyinit}"></style>
+<body>
+<div>
+    <header th:replace="~{fragment/header :: header}"></header>
+    <nav th:replace="~{fragment/header :: nav}"></nav>
+    <div class="detail-container">
+        <div class="row equal-height">
+            <!-- MAIN CONTENT -->
+            <div id="t3-content" class="t3-content col-md-12">
+                <div id="system-message-container"></div>
+                <div class="productdetails-view productdetails">
+                    <div class="page-header">
+                        <div style="clear:both;position:absolute;margin-top:12px;z-index:10;text-align:center;">
+                            <div
+                                    style="display:block;border: 1px solid rgba(255,255,255,0.1);padding-left:10px;padding-right:10px;">
+                                <img src="/images/steam.svg" width="80"></div>
+                        </div>
+                        <h1 th:if="${game.getEnName() != null}"
+                            style="font-size:20px;padding-left:110px;display:inline-block;text-transform:initial">
+                            <span th:text="${game.getName()}"></span><br>
+                            <span style="text-transform:none" th:text="${game.getEnName()}"></span>
+                        </h1>
+                        <h1 th:unless="${game.getEnName() != null}"
+                            style="padding: 15px; font-size:20px;padding-left:110px;display:inline-block;text-transform:initial">
+                            <span th:text="${game.getName()}"></span>
+                        </h1>
+                    </div>
+
+                    <div class="vm-product-container">
+                        <div class="left">
+                            <div class="vm-product-media-container" itemprop="video" itemscope=""
+                                 itemtype="https://schema.org/VideoObject">
+                                <div class="main-image">
+                                    <div id="screenshot_image">
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                            <iframe
+                                                    th:if="${game.getMovies() != null}"
+                                                class="embed-responsive-item"
+                                                allow='autoplay'
+                                                th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getMovieList().get(1)} +'?autoplay=1&mute=1'}"></iframe>
+                                            <th:block th:unless="${game.getMovies() != null}">
+                                                <img th:if="${game.platform eq 'steam'}" th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getScreenshootsList().get(1)}}">
+                                                <img th:unless="${game.platform eq 'steam'}" th:src="${game.getScreenshootsList().get(0)}">
+                                            </th:block>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="gallery-wrapper">
+                                    <div class="gallery youmayknow-gallery">
+                                        <th:block th:if="${game.movies != null}">
+                                            <th:block th:each="movie, movieStat : ${game.getMovieList()}" >
+                                                <div  th:if="${movieStat.odd == true}"
+                                                      class="item screenshot_thumbnail" style="cursor:pointer">
+                                                    <div class="media_player_marker"><span>▶</span></div>
+                                                    <img th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getMovieList().get(movieStat.index)}}"
+                                                        data-type="media"
+                                                         th:attr="data-url=${'<div class=''embed-responsive embed-responsive-16by9''><iframe allow=''autoplay'' class=''embed-responsive-item'' src=''https://cdn.akamai.steamstatic.com/steam/apps' + game.getMovieList().get(movieStat.index+1)+'?autoplay=1&mute=1''>></iframe></div>'}"
+                                                     >
+                                                </div>
+                                            </th:block>
+                                        </th:block>
+                                        <th:block th:if="${game.screenshots != null}">
+                                            <th:block th:if="${game.platform eq 'steam'}" th:each="shots, shotsStat : ${game.getScreenshootsList()}" >
+                                                <div  th:if="${shotsStat.odd == true}"
+                                                      class="item screenshot_thumbnail" style="cursor:pointer">
+                                                <img  th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getScreenshootsList().get(shotsStat.index)}}"
+                                                     data-type="image/jpeg"
+                                                      th:attr="data-url=${'<img src=''https://cdn.akamai.steamstatic.com/steam/apps' + game.getScreenshootsList().get(shotsStat.index+1)+'''>'}">
+                                                </div>
+                                            </th:block>
+                                            <th:block th:unless="${game.platform eq 'steam'}" th:each="shots, shotsStat : ${game.getScreenshootsList()}" >
+                                                <div  class="item screenshot_thumbnail" style="cursor:pointer">
+
+                                                    <img  th:src="${shots}"
+                                                          data-type="image/jpeg"
+                                                          th:attr="data-url=${'<img src='''+ shots+'''>'}">
+                                                </div>
+                                            </th:block>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="vm-productdetail-tabs-container">
+
+                                <ul class="nav nav-tabs" style="margin-bottom:8px">
+                                    <li class="active" data-toggle="detailedDescription"><a href="#goods_info3" data-toggle="tab">게임정보</a></li>
+                                    <li data-toggle="requirements"><a href="#goods_info5" data-toggle="tab">시스템 요구사항</a></li>
+                                    <li data-toggle="review"><a href="#goods_info5" data-toggle="tab">리뷰</a></li>
+                                </ul>
+
+                                <div id="myTabContent" class="tab-content">
+
+                                    <div id="detailedDescription" class="tab-pane fade active in">
+                                        <div class="product-description">
+                                        </div>
+                                        <div class="product-description" th:utext="${game.getDetailedDescription()}"></div>
+                                    </div>
+                                    <div id="requirements" class="tab-pane fade">
+                                        <div class="product-description" >
+                                            <div th:utext="${game.getMinRequirements()}"></div>
+                                            <div th:utext="${game.getRcmRequirements()}"></div>
+                                            <p>※ 시스템 요구 사항은 출시 버전을 기준으로 하며, 컨텐츠 추가와 업데이트로 인한 변경 사항이 있을 수 있습니다.</p>
+                                        </div>
+                                    </div>
+                                    <div id="review" class="tab-pane fade">
+                                        <div class="product-description">
+                                            <div id="t3-content-review" class="t3-content-review">
+                                                <div class="category-view">
+                                                    <div class="browse-view">
+                                                        <h1 style="border-top:1px solid rgba(255,255,255,0.1);">
+                                                            <span>게임 리뷰</span></h1>
+                                                        <input id="currPage" type="number" name="currPage" value=1 hidden="hidden">
+                                                        <input id="sort" type="text" name="sort" value="REG_DATE" hidden="hidden">
+                                                        <input id="appId" type="hidden" name="appId" th:value="${game.getSteamAppid()}">
+
+                                                        <div class="row" id="searchBox">
+                                                            <div class="container">
+                                                                <th:block th:if="${user != null}">
+                                                                <form class="form-horizontal" id="reviewFrm"
+                                                                      name="searchFrm2" >
+                                                                    <input type="text" name="isPositive"
+                                                                           value="" hidden="hidden">
+
+                                                                    <div class="well text-center" id="search_box"
+                                                                         style="position: relative;">
+                                                                        <label class="col-sm-3 control-label-most"
+                                                                               for="search_keyword"
+                                                                               style="position: absolute; top: 0; left: 15px; font-weight: bold;">
+                                                                            리뷰 입력
+                                                                        </label>
+                                                                        <div class="form-group"
+                                                                             style="    margin-top: 15px;">
+                                                                            <div class="">
+                                                                                <label>평가 선택</label>
+                                                                                <div class="insert_thumbs" data-thumbs="up">
+                                                                                    <img id="votingImage1"
+                                                                                         src="/images/thumbsUp.png"
+                                                                                         style="width: 50px;">
+                                                                                </div>
+                                                                                <div class="insert_thumbs"  data-thumbs="down">
+                                                                                    <img id="votingImage2"
+                                                                                         src="/images/thumbsDown.png"
+                                                                                         style="width: 50px;">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-99"
+                                                                                 style="    margin-top: 10px;    width: 70%;">
+                                                                                <div class="input-group"
+                                                                                     style="position: relative; height: 80px;">
+                                                                                    <textarea id="reviewContent"
+                                                                                              cols="15" rows="15"
+                                                                                              name="content"
+                                                                                              class="form-control"></textarea>
+                                                                                    <p class="count" style="    bottom: -17px;
+                                                                                                                right: 60px;
+                                                                                                                position: absolute;
+                                                                                                                line-height: 24px;
+                                                                                                                white-space: pre-line;
+                                                                                                                word-wrap: break-word;">
+                                                                                        <span>0</span> / 100
+                                                                                    </p>
+                                                                                    <span class="input-group-btn">
+                                                                                            <input id="insertReviewBtn"
+                                                                                                    class="btn btn-default"
+                                                                                                    type="button"
+                                                                                                    style="    height: 90px;"
+                                                                                                   value="입력">
+                                                                                        </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                </th:block>
+                                                                <div class="well well-sm" id="search_keyword">
+                                                                    <div class="reviewSortP">정렬 옵션 : <span class="reviewSort" data-sort="REG_DATE">최신순</span> <span class="reviewSort" data-sort="POSITIVE">긍정 리뷰</span><span class="reviewSort" data-sort="NEGATIVE">부정 리뷰</span> <span class="reviewSort" data-sort="HLEPFUL">도움이 된 리뷰</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="browse-view-inner list-group-item">
+
+                                                            <div class="row equal-height equal-height-child">
+                                                                <div class="product vm-col vm-col-3 vertical-separator col"
+                                                                     child-height="83">
+                                                                    <div class="spacer" style="min-height:83px; ">
+                                                                        <div class="vm-product-media-container-review"
+                                                                             style="    height: 100%; position: relative;">
+                                                                            <a title="profile-img"
+                                                                               href="./game_page.html?product_code=50004529"><img
+                                                                                    src="/images/bg-photo.png"
+                                                                                    alt="profile-img"
+                                                                                    class="browseProductImage"
+                                                                                    style="    margin-right: 15px;
+                                                                                        margin-left: 15px;
+                                                                                        margin-top: 15px;
+                                                                                        height: 55%;">
+                                                                            </a>
+                                                                            <span style="    left: 18%;
+                                                                                bottom: 0;
+                                                                                position: absolute;">유저 이름</span>
+                                                                        </div>
+
+                                                                        <div class="vm-product-descr-container-1"
+                                                                             style="width:570px;padding:0; height: 100%;">
+                                                                            <div class="vm3pr-customfields-product"
+                                                                                 style="display: flex; align-items: center;height: 100%;">
+                                                                                <a href="#"
+                                                                                   class="vote_header tooltip"
+                                                                                   data-tooltip-text="평가 전체 보기">
+                                                                                    <div class="thumb">
+                                                                                        <img id="votingImage"
+                                                                                             src="/images/thumbsUp.png"
+                                                                                             width="50%">
+                                                                                    </div>
+                                                                                    <span class="label label-light"
+                                                                                          style="width: 100%;
+                                                                                        background: rgba(255, 255, 255, 0.1);
+
+                                                                                        font-size: 13px;  background: rgba(255,255,255,0.1);color: #ffffff;">추천</span>
+                                                                                </a>
+                                                                                <h2
+                                                                                        style="height: 80%;
+                                                                                        font-size: 14px;     margin-left: 10px;">
+                                                                                    <div class="review-content"
+                                                                                         style="word-break: break-all;
+                                                                                            overflow: auto;
+                                                                                            height: 70%;">
+                                                                                        내용내용내용내용내용내용내용내용내용
+                                                                                        내용내용내용내용내용내용내용내용내용
+                                                                                        내용내용내용내용내용내용내용내용내용
+                                                                                    </div>
+                                                                                    <div class="PricebasePrice vm-display vm-price-value"
+                                                                                         style="font-size: 12px;
+                                                                                            text-transform: uppercase;
+                                                                                            font-style: normal;
+                                                                                            display: inline-block;
+                                                                                            ">
+                                                                                            <span class="PricebasePrice"
+                                                                                                  style="color: #ffffff; opacity: 0.4;">
+                                                                                                날짜</span>
+                                                                                    </div>
+                                                                                </h2>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="vm-product-descr-container-1"
+                                                                             style="margin-left: 10px;margin-right: 10px; width:66px;padding:0;overflow:hidden; color: #8091a2;;">
+                                                                                <span class="label "
+                                                                                      style="background-color: #4e69a2; padding: .2em .6em .3em;font-size:13px;font-family:tahoma;color:#e7e7e7;;padding-top:8px;padding-bottom:8px;display:block;">유용해요
+                                                                                </span>
+                                                                            <span class="label "
+                                                                                  style="padding: .2em .6em .3em;font-size:13px;font-family:tahoma;color:#8091a2;padding-top:8px;padding-bottom:8px;display:block; ">신고
+                                                                                </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                    </div>
+
+                                                    <div class="vm-pagination" style="clear:both;">
+                                                        <div style="width:700px;height:38px;margin:0 auto">
+                                                            <ul class="pagination">
+                                                                <li class="pageBtn"  id="firstBtn"><a href="#" th:text="${'« First'}"></a></li>
+                                                                <li class="pageBtn" id="prevBtn"><a href="#"  th:text="${'« Prev'}"></a></li>
+
+                                                                <li class="pageBtn" id="nextBtn"><a href="#"  th:text="${'Next »'}"></a></li>
+                                                                <li class="pageBtn" id="lastBtn" ><a href="#"  th:text="${'Last »'}"></a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="right">
+                            <div class="vm-product-details-container">
+                                <div class="t3-module module normal-module">
+                                    <div id="goods_img">
+
+                                        <img th:if="${game.platform eq 'steam'}"
+                                            th:src="@{'https://cdn.akamai.steamstatic.com/steam/apps' + ${game.getHeaderImage()}}"
+                                            th:alt="${game.getName()}"
+                                            width="320" height="150"
+                                            onerror="this.src='/images/404.jpg'">
+                                        <img th:unless="${game.platform eq 'steam'}"
+                                             th:src="${game.getHeaderImage()}"
+                                             th:alt="${game.getName()}"
+                                             width="320" height="150"
+                                             onerror="this.src='/images/404.jpg'">
+                                    </div>
+                                    <div class="module-inner">
+                                        <div class="module-ct">
+                                            <div class="vmgroup single-product  normal-module">
+                                                <div class="vmproduct normal-module">
+                                                    <div class="spacer">
+                                                        <div id="goods_info1"
+                                                             style="color:#d43f3a;line-height:140%;font-weight:bold;">
+                                                                <span
+                                                                        style="clear:both;font-weight:bolder;font-size:14px">■
+                                                                    대한민국, 일본, 싱가폴, 홍콩 외 국가에서는 제품 코드(키) 등록이 불가합니다. 플랫폼의
+                                                                    국가 설정을 확인해 주시기 바랍니다.</span>
+                                                        </div>
+
+                                                        <div class="product-short-description">
+
+                                                        </div>
+
+                                                        <div class="product-price salesprice" id="productPrice8"
+                                                             style="padding-top:10px">
+                                                            <div class="PricebasePrice vm-display vm-price-value">
+                                                                <span class="vm-price-desc">정상가 </span>
+                                                                <span class="PricebasePrice"
+                                                                      th:text="${game.getFormattedPrice()+'원'}"
+                                                                      style="font-weight:normal;font-size:13px"
+                                                                ></span>
+                                                            </div>
+                                                            <span class="price-crossed"></span>
+                                                            <div class="PricesalesPrice vm-display vm-price-value">
+                                                                <span class="vm-price-desc">판매가 </span>
+
+                                                                <span class="PricesalesPrice"
+                                                                      th:text="${game.getFormattedSalesPrice()}"
+                                                                      style="color:#f0ad4e"></span>
+                                                                <span>원</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="product-info">
+                                                            <div class="vm-display release_date">
+                                                                <span class="vm-desc">출시일 </span>
+                                                                <span class="vm-value"
+                                                                      th:text="${game.convertDateToString()}"></span>
+                                                            </div>
+                                                            <div class="vm-display">
+                                                                <span class="vm-desc">장르 </span>
+                                                                <span class="vm-value">
+                                                                <th:block th:if="${game.getGenreList()!= null}" th:each="genre, genreStat: ${game.getGenreList()}">
+                                                                    <th:block th:unless="${genreStat.size == genreStat.count}">
+                                                                        [[${genre}]]/
+                                                                    </th:block>
+                                                                    <th:block th:if="${genreStat.size == genreStat.count}">
+                                                                        [[${genre}]]
+                                                                    </th:block>
+                                                                </th:block>
+                                                                </span>
+                                                            </div>
+                                                            <div class="vm-display">
+                                                                <span class="vm-desc">퍼블리셔 </span>
+                                                                <span class="vm-value" th:text="${game.getPublisher()}">
+                                                                      <!--<a href="#" th:text="${game.getPublisher()}"></a>-->
+                                                                </span>
+                                                            </div>
+                                                            <div class="vm-display">
+                                                                <span class="vm-desc">개발사 </span>
+                                                                <span class="vm-value" th:text="${game.getDevelopers()}"></span>
+                                                            </div>
+                                                            <div class="vm-display">
+                                                                <span class="vm-desc">플랫폼 </span>
+                                                                <span class="vm-value">Steam</span>
+                                                            </div>
+                                                            <div class="vm-display">
+                                                                <span class="vm-desc">언어 </span>
+                                                                <span class="vm-value" th:utext="${game.getSupportedLanguages()}" ></span>
+                                                            </div>
+                                                            <div id="etc" style="width:100%;max-width:300px;">
+                                                                <th:block th:switch="${game.getRating()}">
+                                                                    <img th:case="0" src="/images/age_0.gif">
+                                                                    <img th:case="12" src="/images/age_12.gif">
+                                                                    <img th:case="15" src="/images/age_15.gif">
+                                                                    <img th:case="19" src="/images/age_19.gif">
+
+                                                                </th:block>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="vmproduct-link" style="text-align:center">
+                                                            <th:block th:if="${game.stock > 0}">
+                                                                <button class="btn btn-warning btn-lg btn_cart"
+                                                                        id="btn_cart"
+                                                                        th:attr="data-appId=${game.getSteamAppid()}"
+                                                                        type="button">
+                                                                    장바구니
+                                                                </button>
+                                                                <button class="btn btn-default btn-lg btn_wishlist"
+                                                                        id="btn_wishlist"
+                                                                        th:attr="data-appId=${game.getSteamAppid()}"
+                                                                        type="button">
+                                                                    위시리스트
+                                                                </button>
+                                                            </th:block>
+                                                            <th:block th:unless="${game.stock > 0}">
+                                                                <strong style="color:red">품절 상품입니다.</strong>
+                                                            </th:block>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="clear"></div>
+
+                            <div class="product-share-container">
+                                <div class="docs-section">
+                                    <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);   margin: -20px -20px 20px -20px;">
+                                        <h2 style="font-size:16px;text-indent:20px">공유하기</h2>
+
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-12">
+                                            <div class="input-inline" style="display: flex; justify-content: center;">
+                                                <button type="button"  th:onclick="fn_sendFB('facebook' , [[${game.getName()}]],'');" class="btn" id="btn_facebook" style="margin-right: 3px; background:#4e69a2;color:#ffffff;font-size:13px">
+                                                    <i class="fa fa-facebook" style="background:#4e69a2;color:#ffffff"></i> 페이스북
+                                                </button>
+                                                <button type="button"  th:onclick="fn_sendFB('twitter', [[${game.getName()}]],'');" class="btn" id="btn_twitter2" style="margin-right: 3px; background:#319de1;color:#ffffff;font-size:13px">
+                                                    <i class="fa fa-twitter" style="background:#319de1;color:#ffffff"></i> 트위터
+                                                </button>
+                                                <button type="button"  th:onclick="fn_sendFB('kakao', [[${game.getName()}]], [[${'https://cdn.akamai.steamstatic.com/steam/apps' + game.getHeaderImage()}]]);" class="btn" id="btn_kakao" style="background:#FDDC3F ;font-size:13px">
+                                                    <i class="fa-fw fas fa-comment"  aria-hidden="true"></i>
+                                                    KakaoTalk
+                                                </button>
+                                                <!-- &ndash;&gt;
+                                                 <button type="button" class="btn btn_facebook" id="btn_facebook2"><i
+                                                         class="fa fa-facebook"
+                                                         style="background:#4e69a2;color:#ffffff;font-size:32px;"></i></button>
+                                                 <button type="button" class="btn btn_x" id="btn_twitter"><img
+                                                         src="/images/sns/logo-x.svg"
+                                                         style="width:32px;height:32px;"></button>
+                                                 &lt;!&ndash;-->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- right -->
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:replace="~{fragment/admin :: modal}"></div>
+<div class="overlay"></div>
+</body>
+</html>
+<script defer type="text/javascript">
+
+    let reportEvent;
+    let voteEvent;
+    let insertEvent;
+
+    $(document).ready(function(){
+        getReviewList();
+        initModal();
+        reportEvent = false;
+        voteEvent = false;
+        insertEvent = false;
+    });
+/* 버튼 클릭 함수 모음*/
+    $('.screenshot_thumbnail').on('click', function () {
+        $('#screenshot_image').html($(this).find('img').attr('data-url'));
+    });
+
+    //모달창 확인 버튼함수
+    function valuesAccept(){
+        document.querySelector(".modal").classList.remove("active");
+        document.querySelector(".overlay").classList.remove("active");
+    }
+    function initModal(){
+        $('.btn-list > button:last').remove();
+    }
+
+    function showModalCheck(subject) {
+        document.querySelector(".modal").classList.add("active");
+        document.querySelector(".overlay").classList.add("active");
+        document.querySelector(".subject").innerHTML = subject;
+    }
+    $('#reviewContent').on('keyup', function() {
+        if (this.value.length > 100) this.value = this.value.substr(0, 100);
+
+        $('.input-group .count span').html(this.value.length);
+
+    });
+    //신고 기능
+    $(document).on("click", '.reportBtn', function(event) {
+        event.preventDefault();
+        if(reportEvent == true)return;
+        reportEvent = true;
+        var formData = {
+            reviewId: $(this).attr('data-reviewId')
+        };
+        var jsonData = JSON.stringify(formData);
+        console.log(JSON.parse(jsonData));
+        // Ajax 요청
+        $.ajax({
+            type: 'POST',
+            url: '/gameReview/report',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function(response) {
+                console.log(response);
+                if(response == "success"){
+                    showModalCheck("신고되었습니다.");
+                }else if(response == "LOGIN_REQUIRED"){
+                    showModalCheck("로그인이 필요한 서비스입니다.");
+                }else{
+                    showModalCheck("실패했습니다.");
+                }
+
+            },
+            error: function(xhr, status, error) {
+                // 요청이 실패하면 이 부분을 실행
+                console.error(xhr.responseText);
+            }
+        }).always( function (){
+            reportEvent = false;
+        })
+    });
+
+    //유용해요 기능
+    $(document).on("click", '.voteBtn', function(event) {
+        event.preventDefault();
+        if(voteEvent == true)return;
+        voteEvent = true;
+
+        var formData = {
+            reviewId: $(this).attr('data-reviewId')
+        };
+        var jsonData = JSON.stringify(formData);
+        console.log(JSON.parse(jsonData));
+        // Ajax 요청
+        $.ajax({
+            type: 'POST',
+            url: '/gameReview/vote',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function(response) {
+                console.log(response);
+                if(response == "success"){
+                    showModalCheck("의견을 보냈습니다.");
+                    getReviewList();
+                }else if(response == "ALREADY_VOTED"){
+                    showModalCheck("이미 의견을 보낸 리뷰입니다.");
+                }else if(response == "LOGIN_REQUIRED"){
+                    showModalCheck("로그인이 필요한 서비스입니다.");
+                }else{
+                    showModalCheck("실패했습니다.");
+                }
+
+
+            },
+            error: function(xhr, status, error) {
+                // 요청이 실패하면 이 부분을 실행
+                console.error(xhr.responseText);
+            }
+        }).always( function (){
+            voteEvent = false;
+        });
+    });
+
+    $(document).on("click", '.live-link , .pageBtn', function(event) {
+        event.preventDefault();
+        $('#currPage').val($(this).find('a').attr('data-page'));
+        getReviewList();
+    });
+
+    $('.reviewSort').on('click', function () {
+        $('#sort').val($(this).attr('data-sort'));
+        getReviewList();
+    });
+    /* 리뷰 리스트 출력 함수 */
+    function getReviewList(){
+        var formData = {
+            currPage: $('#currPage').val(),
+            appId: $('#appId').val(),
+            sort: $('#sort').val()
+        };
+        var jsonData = JSON.stringify(formData);
+        console.log(JSON.parse(jsonData));
+        // Ajax 요청
+        $.ajax({
+            type: 'POST',
+            url: '/gameReview/list',
+            contentType: 'application/json',
+            data: jsonData,
+            dataType: "json",
+            success: function(response) {
+                console.log(response.list);
+                console.log(response.reviewPageDTO);
+                 // 성공적으로 요청이 완료되면 이 부분을 실행
+
+                 var col = "";
+                 $('.list-group-item').html('');
+                 for(let i = 0; i < response.list.length; i++){
+                     var review =  response.list[i];
+                     cal = "";
+                     cal = createProductHTML(review);
+                     $('.list-group-item').append(cal);
+                 }
+                setValue(response.reviewPageDTO);
+                // 받은 응답에 대한 추가적인 처리를 수행할 수 있습니다.
+            },
+            error: function(xhr, status, error) {
+                // 요청이 실패하면 이 부분을 실행
+                console.error(xhr.responseText);
+            }
+        });
+    }
+    function setValue(reviewPageDTO){
+
+        $('#currPage').val(reviewPageDTO.currPage);
+
+        if(reviewPageDTO.currPage > reviewPageDTO.pageSize){
+            $('#firstBtn').removeClass('disabled').removeClass('hide');
+            $('#firstBtn').find('a').attr('data-page', 1);
+            $('#prevBtn').removeClass('disabled').removeClass('hide');
+            $('#prevBtn').find('a').attr('data-page', reviewPageDTO.startPage-1);
+        }else{
+            $('#firstBtn').addClass('disabled').addClass('hide');
+            $('#prevBtn').addClass('disabled').addClass('hide');
+        }
+        if(reviewPageDTO.totalPage > reviewPageDTO.pageSize && reviewPageDTO.endPage < reviewPageDTO.totalPage ){
+            $('#nextBtn').removeClass('disabled').removeClass('hide');
+            $('#nextBtn').find('a').attr('data-page', reviewPageDTO.endPage+1);
+        }else{
+            $('#nextBtn').addClass('disabled').addClass('hide');
+        }
+
+        if(reviewPageDTO.currPage != reviewPageDTO.totalPage){
+            $('#lastBtn').removeClass('disabled').removeClass('hide');
+            $('#lastBtn').find('a').attr('data-page', reviewPageDTO.totalPage);
+        }else{
+            $('#lastBtn').addClass('disabled').addClass('hide');
+        }
+
+        $('.live-link').remove();
+
+        var html = '';
+        for(let i = reviewPageDTO.startPage; i <= reviewPageDTO.endPage; i++){
+            var newClass= '';
+            if(i == reviewPageDTO.currPage){
+                newClass = 'active';
+            }
+            html += '<li class="live-link ' + newClass + '">' +
+                '<a href="#" data-page="' + i + '">' + i + '</a>' +
+                '</li>';
+        }
+        $(html).insertAfter('#prevBtn');
+    }
+
+
+    $('.insert_thumbs').on('click', function () {
+        let isPositive = $(this).attr('data-thumbs');
+        var formElement = $(this).closest("form");
+        formElement.find('input[name="isPositive"]').val(isPositive);
+
+        console.log(formElement.find('input[name="isPositive"]').val());
+
+        $('.insert_thumbs').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    /* 리뷰 추가 함수 */
+    $('#insertReviewBtn').on('click', function () {
+
+        if(insertEvent === true)return;
+        console.log('#insertReviewBtn.on.click');
+        insertEvent = true;
+        var formElement = $(this).closest("form");
+
+
+        let isPositive =  formElement.find('input[name="isPositive"]').val();
+        let content =  formElement.find('textarea[name="content"]').val();
+        console.log(isPositive);
+        if(isPositive !="up" && isPositive != "down"){
+            showModalCheck("평가를 선택해주세요.")
+            insertEvent = false;
+            return;
+        }
+        if(content == null || $.trim(content+'') ==''){
+            formElement.find('textarea[name="content"]').focus();
+            showModalCheck("내용을 입력해 주세요.");
+            insertEvent = false;
+            return;
+        }
+
+
+        var formData = {
+            isPositive: isPositive == "up",
+            content: content,
+            appId: $('#appId').val()
+        };
+        var jsonData = JSON.stringify(formData);
+        console.log(JSON.parse(jsonData));
+        // Ajax 요청
+        $.ajax({
+            type: 'POST',
+            url: '/gameReview/insert',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function(response) {
+                console.log(response);
+                if (response == "success") {
+                    showModalCheck("등록되었습니다.");
+                    $('#reviewFrm').remove();
+                    getReviewList();
+                }else if(response == "LOGIN_REQUIRED"){
+                    showModalCheck("로그인이 필요한 서비스입니다.");
+                }else{
+                    showModalCheck("실패했습니다.");
+                }
+            },
+            error: function(xhr, status, error) {
+                // 요청이 실패하면 이 부분을 실행
+                console.error(xhr.responseText);
+            }
+        }).always( function (){
+            insertEvent = false;
+        });
+    });
+
+
+    function createProductHTML(review) {
+        var html = ''; // 먼저 빈 문자열로 초기화합니다.
+
+// 첫 번째 div 요소
+        html += '<div class="product vm-col vm-col-3 vertical-separator col" child-height="83">';
+        html += '    <div class="spacer" style="min-height:83px;">';
+
+// 두 번째 div 요소 (프로필 이미지와 사용자 이름)
+        html += '        <div class="vm-product-media-container-review" style="display: flex; flex-direction: column; align-items: center; HEIGHT: 100%; position: relative;">';
+        html += '            <a title="profile-img" href="#">';
+        html += '                <img src="/images/bg-photo.png" alt="profile-img" class="browseProductImage" style="margin-right: 15px; margin-left: 15px; margin-top: 15px; width: 70px;">';
+        html += '            </a>';
+        html += '            <span style="">' + review.userNickName + '</span>';
+        html += '        </div>';
+
+// 세 번째 div 요소 (리뷰 내용과 등록일)
+        html += '        <div class="vm-product-descr-container-1" style="width:570px;padding:0;height: 100%;">';
+        // div 요소 시작
+        html += '<div class="vm3pr-customfields-product" style="height: 100%; display: flex; align-items: center;">';
+
+// 평가 링크
+        html += '<a href="#" class="vote_header tooltip" data-tooltip-text="평가 전체 보기">';
+        html += '    <div class="thumb">';
+        if(review.isPositive == true){
+            html += '        <img id="votingImage" src="/images/thumbsUp.png" width="50%">';
+        }else{
+            html += '        <img id="votingImage" src="/images/thumbsDown.png" width="50%">';
+        }
+        html += '    </div>';
+        html += '    <span class="label label-light" style="width: 100%; background: rgba(255, 255, 255, 0.1); font-size: 13px; background: rgba(255,255,255,0.1);color: #ffffff;">';
+        html += (review.isPositive == true ? '긍정' : '부정');
+        html+= '</span>';
+        html += '</a>';
+
+// 내용과 날짜
+        html += '<h2 style="height: 80%; font-size: 14px; margin-left: 10px;">';
+        html += '    <div class="review-content" style="word-break: break-all; overflow: auto; height: 70%;">';
+        html +=  review.content;
+        html += '    </div>';
+        html += '    <div class="PricebasePrice vm-display vm-price-value" style="font-size: 12px; text-transform: uppercase; font-style: normal; display: inline-block;">';
+        html += '        <span class="PricebasePrice" style="color: #ffffff; opacity: 0.4;">' + review.formattedRegDate;
+        if(review.voteCnt == 0){
+            html +=  '   0명의 회원이 이 리뷰가 유용하다고 합니다.</span>';
+        }else{
+            html +=  '   '+review.voteCnt +'명의 회원이 이 리뷰가 유용하다고 합니다.</span>';
+        }
+        html += '    </div>';
+        html += '</h2>';
+
+// div 요소 종료
+        html += '</div>';
+        html += '        </div>';
+
+// 네 번째 div 요소 (유용해요와 신고 버튼)
+        html += '        <div class="vm-product-descr-container-1" style="margin-left: 10px; margin-right: 10px; width:66px;padding:0;overflow:hidden; color: #8091a2;">';
+        if(review.reviewVoteId != 0){
+            html += '            <span class="label myVote" data-reviewId="' + review.reviewId + '"  >유용해요</span>';
+        }else{
+            html += '            <span class="label voteBtn" data-reviewId="' + review.reviewId + '"  >유용해요</span>';
+        }
+        html += '            <span class="label reportBtn" data-reviewId="' + review.reviewId + '" style="padding: .2em .6em .3em; font-size:13px; cursor: pointer; font-family:tahoma; color:#8091a2;padding-top:8px; padding-bottom:8px;display:block;">신고</span>';
+        html += '        </div>';
+
+        html += '    </div>';
+        html += '</div>';
+        return html;
+    }
+
+    $('.nav li').on('click', function () {
+        $('.nav li').removeClass('active');
+        $(this).addClass('active');
+
+        let name = $(this).attr('data-toggle');
+        $('.tab-pane').removeClass('in');
+        setTimeout(function (){
+            $('.tab-pane').removeClass('active');
+
+            $('#'+name).addClass('active');
+            setTimeout(function (){
+                $('#'+name).addClass('in');
+            },150);
+        },180);
+
+    });
+
+// 장바구니에 담는 함수
+$('.btn_cart').on('click', function () {
+    console.log(`장바구니로`);
+    console.log($(this).attr('data-appId'));
+    isLoggedIn(logTrueFalse => {
+        if (logTrueFalse) {
+            const url = "/cart/addToCart";
+            fetch(url,{
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"},
+                body: "appId="+$(this).attr('data-appId'),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    if(data==="success"){
+                        showModalCheck("장바구니에 담았습니다.")
+                    }else {
+                        showModalCheck("이미 장바구니에 등록된 상품입니다.")
+                    }
+                })
+                .catch(error => {
+                    console.log("error: ", error);
+                });
+        } else {
+            showModalCheck("로그인을 하셔야 이용이 가능합니다.");
+        }
+    });
+});
+
+    // 위시리스트에 담는 함수
+    $('.btn_wishlist').on('click', function () {
+        console.log(`위시리스트로`);
+        console.log($(this).attr('data-appId'));
+        isLoggedIn(logTrueFalse => {
+            if (logTrueFalse) {
+                const url = "/users/addToWishlist";
+                fetch(url,{
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"},
+                    body: "appId="+$(this).attr('data-appId'),
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        if(data==="success"){
+                            showModalCheck("위시리스트에 담았습니다.")
+                        }else {
+                            showModalCheck("이미 위시리스트에 담긴 상품입니다.")
+                        }
+                    })
+                    .catch(error => {
+                        console.log("error: ", error);
+                    });
+            } else {
+                showModalCheck("로그인을 하셔야 이용이 가능합니다.");
+            }
+        });
+    });
+</script>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script defer src="/js/sns.js" type="text/javascript"></script>

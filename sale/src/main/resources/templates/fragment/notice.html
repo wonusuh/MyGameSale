@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<main th:fragment="noticeList" >
+<div class="kbody">
+    <th:block th:if="${user} != null">
+    <div th:if="${user.userRole.toString() eq 'ROLE_MANAGER' or user.userRole.toString() eq 'ROLE_ADMIN'}" class="admin-button">
+        <input
+                onclick="location.href='/notice/noticeForm'"
+                type="button"
+                class="noticeFormbtn"
+                value="추가"
+        />
+    </div>
+    </th:block>
+    <table class="kblocktable" border="1">
+        <tbody>
+        <tr style="height: 40px; line-height: 40px">
+            <th>번호</th>
+            <th>구분</th>
+            <th>제목</th>
+            <th>작성일</th>
+            <th>조회</th>
+        </tr>
+        <tr th:each="list : ${noticeList}">
+            <td style="text-align: center; width: 60px"><p th:text="${list.id}"></p></td>
+            <td style="text-align: center; width: 60px">공지</td>
+            <td style="width: 480px">
+                <th:block th:if="${user} != null">
+                    <a th:if="${user.userRole.toString() eq 'ROLE_MANAGER' or user.userRole.toString() eq 'ROLE_ADMIN'}"
+                    th:href="@{/notice/noticeForm(id=${list.id})}" th:text="${list.title}">제목</a>
+                    <a th:if="${user.userRole.toString() eq 'ROLE_USER'}"
+                       th:href="@{/notice/noticeView(id=${list.id})}" th:text="${list.title}">제목</a>
+                </th:block>
+                <th:block th:if="${user} == null">
+                    <a th:href="@{/notice/noticeView(id=${list.id})}" th:text="${list.title}">제목</a>
+                </th:block>
+            </td>
+            <td style="text-align: center; width: 120px"><p th:text="${list.date}"></p></td>
+            <td style="text-align: center; width: 60px"><p th:text="${list.count}"></p></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="ksearchcontainer">
+    <div class="search">
+        <form action="/notice/seach" method="get" id="jumpto" name="jumpto">
+            <div class="fileldset">
+                <input
+                        type="text"
+                        id="searchValue"
+                        class="ks input"
+                        name="searchvalue"
+                        size="30"
+                />
+                <select name="seachType" id="searchType">
+                    <option value="title">제목</option>
+                </select>
+                <input type="submit" class="kbutton ks" value="검색" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="pageing">
+    <nav class="navs">
+        <ul class="pagination">
+            <th:block th:if="${start} >= 10">
+                <li><a th:href="@{/notice/customer(page=${start - 1},size=15)}"><</a></li>
+            </th:block>
+            <th:block th:if="${start} < 10">
+                <li><a href="javascript:return false"><</a></li>
+            </th:block>
+            <th:block th:each="num,numStat :${#numbers.sequence(start,end)}">
+                <li th:if="${!numStat.last}"><a th:href="@{/notice/customer(page=${num},size=15)}" th:text="${num+1}"></a></li>
+            </th:block>
+            <th:block th:if="${end} < ${total}">
+                <li><a th:href="@{/notice/customer(page=${end},size=15)}">></a></li>
+            </th:block>
+            <th:block th:if="${end} >= ${total}">
+                <li><a href="javascript:return false">></a></li>
+            </th:block>
+        </ul>
+    </nav>
+</div>
+</main>
+<main th:fragment="noticeForm">
+    <div class="noticeFormcontainer">
+        <form class="noticeForm" th:action="${notice} != null? '/notice/update' : '/notice/insert'" method="POST">
+            <h1>공지사항</h1>
+            <header class="noticeheader">
+                <hr />
+                <label>제목 : </label>
+                <input type="text" name="title" id="title" th:value="${notice} != null? ${notice.title} : null" />
+            </header>
+            <textarea name="text" id="editor" th:text="${notice} != null?  ${notice.content} : null"></textarea>
+            <footer class="noticefooter">
+                <label>작성자 : </label>
+                <input type="text" name="writer" id="writer" th:value="${notice} != null? ${notice.writer} : null"/>
+                <hr />
+            </footer>
+            <input name="content" id="content"  type="hidden" th:value="${notice} != null? ${notice.content} : null"/>
+            <input name="id" id="id"  type="hidden" th:value="${notice} != null? ${notice.id} : null"/>
+            <input name="count" id="count"  type="hidden" th:value="${notice} != null? ${notice.count} : 0"/>
+            <p class="btn">
+                <input
+                        id="noticebutton"
+                        type="button"
+                        th:value="${notice} == null? '추가' : '수정'"
+                        onclick="testText(form)"
+                />
+            </p>
+        </form>
+    </div>
+</main>
+<main th:fragment="noticeView">
+    <div class="blog-container">
+        <div class="blog-featured">
+            <div class="notice-item">
+                <div class="header-item">
+                    <h1 th:text="${notice.title}">해당 타이틀</h1>
+                </div>
+            </div>
+            <div class="notice-info">
+                <div class="info notice-writer">
+                    <i class="fa fa-user"></i>
+                    <span th:text="'작성자 : ' + ${notice.writer}">작성자 : 더좋은 게임즈 </span>
+                </div>
+                <div class="info notice-type">
+                    <i class="fa fa-folder-open"></i>
+                    <span>공지</span>
+                </div>
+                <div class="info notice-date">
+                    <i class="fa fa-calendar"></i>
+                    <span th:text="'작성일 : ' + ${notice.date}">작성일 : 2024-04-01</span>
+                </div>
+                <div class="info notice-count">
+                    <i class="fa fa-eye"></i>
+                    <span th:text="'조회수 : ' + ${notice.count}">조회수 : 32</span>
+                </div>
+            </div>
+            <div class="notice-main" th:utext="${notice.content}">
+
+            </div>
+            <div class="notice-back">
+                <a class="btn btn-primary" href="/notice">
+                    <span>목록</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

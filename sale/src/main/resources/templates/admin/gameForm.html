@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/admin :: common_header}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="admincontainer">
+    <nav th:replace="~{fragment/admin :: adminnave}"></nav>
+    <main class="adminmain">
+        <div th:replace="~{fragment/game :: ${formUpdate}}"></div>
+    </main>
+</div>
+<div th:replace="~{fragment/admin :: modal}"></div>
+<div class="overlay"></div>
+</body>
+</html>
+<script defer src="/js/gameForm.js"></script>
