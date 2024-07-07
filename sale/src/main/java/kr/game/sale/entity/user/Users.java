@@ -2,7 +2,10 @@ package kr.game.sale.entity.user;
 
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -20,21 +23,9 @@ public class Users {
     private String userPhone;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-
     // OAuth 를 위해 추가하는 필드
     private String provider;
     private String providerId;
-
-//    // Cart 와의 일대다 관계 설정
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @Transient
-//    private List<Cart> carts;
-//
-//    // QnA 와의 일대다 관계 설정
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @Transient
-//    private List<QnA> qnas;
-
 
     @QueryProjection
     public Users(Long id, String username, String password, String userNickname, String userPhone, UserRole userRole, String provider, String providerId) {
@@ -47,5 +38,4 @@ public class Users {
         this.provider = provider;
         this.providerId = providerId;
     }
-
 }
